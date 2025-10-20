@@ -1,15 +1,12 @@
 package com.gb.myeasyblog.entity;
 
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Data
-public class Post {
+public class User {
     private Long id;
-    private String title;
-    private String content;
-    private Long userId;
+    private String username;
+    private String password;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

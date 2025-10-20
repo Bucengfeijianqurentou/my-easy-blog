@@ -7,9 +7,16 @@
 
     <!-- 插入一篇新文章 -->
     <insert id="insert" parameterType="com.gb.myeasyblog.entity.Post">
-        INSERT INTO post (title, content)
-        VALUES (#{title}, #{content})
+        INSERT INTO post (title, content,user_id)
+        VALUES (#{title}, #{content},#{userId})
     </insert>
+
+    <select id="selectByUserId" resultType="com.gb.myeasyblog.entity.Post">
+        SELECT id, title, content, user_id, created_at, updated_at
+        FROM post
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
 
     <update id="update">
         UPDATE post
@@ -26,7 +33,7 @@
         ORDER BY created_at DESC
     </select>
     <select id="selectById" resultType="com.gb.myeasyblog.entity.Post">
-        SELECT id, title, content, created_at, updated_at
+        SELECT id, title, content, user_id, created_at, updated_at
         FROM post
         WHERE id = #{id}
     </select>

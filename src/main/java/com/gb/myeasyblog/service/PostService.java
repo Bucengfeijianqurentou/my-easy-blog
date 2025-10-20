@@ -22,4 +22,6 @@ public interface PostService {
     Result<Post> modify(PostModifyReq postModifyReq);
 
     Result removeById(Integer id);
+
+    PageResult<Post> getPostsByUserId(PageReqDTO pageReqDTO);
 }

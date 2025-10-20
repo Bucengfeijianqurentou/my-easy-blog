@@ -6,4 +6,5 @@ import lombok.Data;
 public class PostAddReqDTO {
     private String title;
     private String content;
+    private Long userId;
 }

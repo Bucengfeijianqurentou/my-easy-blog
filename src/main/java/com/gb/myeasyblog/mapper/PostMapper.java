@@ -12,6 +12,8 @@ public interface PostMapper {
 
     Page<Post> selectAllPosts();
 
+    Page<Post> selectByUserId(Long userId);
+
     Post selectById(Integer id);
 
     int update(Post post);

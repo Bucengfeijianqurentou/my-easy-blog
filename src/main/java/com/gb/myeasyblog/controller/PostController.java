@@ -22,7 +22,7 @@ public class PostController {
 
     private final PostService postService;
 
-        /**
+    /**
      * 保存新的帖子
      *
      * @param postAddReqDTO 帖子添加请求数据传输对象，包含帖子的标题、内容等信息
@@ -82,6 +82,23 @@ public class PostController {
     public Result remove(@PathVariable("id") Integer id) {
         return postService.removeById(id);
     }
+
+
+    /**
+     * 根据用户ID分页获取帖子列表
+     *
+     * @param pageReqDTO 分页请求参数对象，包含分页信息和用户ID
+     * @return 返回分页帖子列表的结果封装
+     */
+    @PostMapping("/api/users/userid")
+    public Result<PageResult<Post>> getPostsByUserId(@RequestBody PageReqDTO pageReqDTO){
+        // 调用服务层方法根据用户ID分页查询帖子列表
+        PageResult<Post> result = postService.getPostsByUserId(pageReqDTO);
+        // 将查询结果封装成统一返回格式
+        return Result.success(result);
+    }
+
+
 
 
 

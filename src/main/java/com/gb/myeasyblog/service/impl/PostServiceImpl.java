@@ -9,6 +9,7 @@ import com.gb.myeasyblog.service.PostService;
 import com.gb.myeasyblog.util.HttpStatusConstants;
 import com.gb.myeasyblog.util.PageResult;
 import com.gb.myeasyblog.util.Result;
+import com.gb.myeasyblog.util.UserContext;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,7 @@ public class PostServiceImpl implements PostService {
         // 创建帖子实体并复制属性
         Post post = new Post();
         BeanUtils.copyProperties(postAddReqDTO, post);
+        post.setUserId(UserContext.getUserId());
 
         // 执行数据库插入操作
         int insert = postMapper.insert(post);
@@ -108,11 +110,21 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public Result modify(PostModifyReq postModifyReq) {
+
+        // 获取文章id
         Long id = postModifyReq.getId();
+        // 根据id查询帖子信息
+        Post oldPost = postMapper.selectById(id.intValue());
         // 检查要修改的帖子是否存在
-        if (Objects.isNull(postMapper.selectById(id.intValue()))) {
+        if (Objects.isNull(oldPost)) {
             return Result.error(HttpStatusConstants.INTERNAL_ERROR, "请求目标不存在");
         }
+        // 检查用户权限
+        if (!UserContext.getUserId().equals(oldPost.getUserId())) {
+            //后续可以换成抛出异常
+            return Result.error(HttpStatusConstants.FORBIDDEN, "无权限修改此帖子");
+        }
+
 
         // 复制属性并设置更新时间
         Post post = new Post();
@@ -152,6 +164,28 @@ public class PostServiceImpl implements PostService {
         return Result.error(HttpStatusConstants.INTERNAL_ERROR, "删除失败");
     }
 
+
+    @Override
+    public PageResult<Post> getPostsByUserId(PageReqDTO pageReqDTO) {
+        int pageNum = pageReqDTO.getPageNum();
+        int pageSize = pageReqDTO.getPageSize();
+
+        // 设置分页参数
+        PageHelper.startPage(pageNum, pageSize);
+
+        // 从上下文中获取userId
+        Long userId = UserContext.getUserId();
+
+        // 查询所有帖子数据
+        List<Post> page = postMapper.selectByUserId(userId);
+
+        // 封装分页信息
+        PageInfo<Post> postPageInfo = new PageInfo<>(page);
+
+        //List<Post> list = postPageInfo.getList();
+
+        return PageResult.of(postPageInfo);
+    }
 
 
 }
