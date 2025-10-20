@@ -1,0 +1,93 @@
+package com.gb.myeasyblog.controller;
+
+import com.gb.myeasyblog.dto.PageReqDTO;
+import com.gb.myeasyblog.dto.PostAddReqDTO;
+import com.gb.myeasyblog.dto.PostModifyReq;
+import com.gb.myeasyblog.entity.Post;
+import com.gb.myeasyblog.service.PostService;
+import com.gb.myeasyblog.util.PageResult;
+import com.gb.myeasyblog.util.Result;
+import com.github.pagehelper.PageInfo;
+import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api")
+public class PostController {
+
+    private final PostService postService;
+
+        /**
+     * 保存新的帖子
+     *
+     * @param postAddReqDTO 帖子添加请求数据传输对象，包含帖子的标题、内容等信息
+     * @return 返回保存结果，包含保存成功的帖子信息或错误信息
+     */
+    @PostMapping("/posts")
+    public Result<Post> save(@RequestBody PostAddReqDTO postAddReqDTO){
+        return postService.save(postAddReqDTO);
+    }
+
+
+
+    /**
+     * 获取所有帖子信息的分页列表
+     *
+     * @param pageReqDTO 分页请求参数对象，包含分页信息如页码、每页大小等
+     * @return 返回封装了分页结果的统一响应对象，其中包含帖子信息的分页数据
+     */
+    @PostMapping("/getAll")
+    public Result<PageResult<Post>> getAll(@RequestBody PageReqDTO pageReqDTO){
+        // 调用服务层获取所有帖子的分页数据
+        PageResult<Post> result = postService.getAll(pageReqDTO);
+        return Result.success(result);
+    }
+
+
+    /**
+     * 根据ID获取帖子信息
+     * @param id 帖子ID
+     * @return 返回包含帖子信息的结果对象
+     */
+    @GetMapping("/get/{id}")
+    public Result<Post> getById(@PathVariable("id") Integer id){
+        return postService.getById(id);
+    }
+
+
+    /**
+     * 修改帖子内容
+     *
+     * @param postModifyReq 帖子修改请求对象，包含要修改的帖子信息
+     * @return 返回修改后的帖子结果封装对象
+     */
+    @PostMapping("/posts/modify")
+    public Result<Post> modify(@RequestBody PostModifyReq postModifyReq) {
+        return postService.modify(postModifyReq);
+    }
+
+
+    /**
+     * 删除指定ID的帖子
+     *
+     * @param id 帖子ID
+     * @return 操作结果
+     */
+    @DeleteMapping("/posts/{id}")
+    public Result remove(@PathVariable("id") Integer id) {
+        return postService.removeById(id);
+    }
+
+
+
+
+
+
+
+
+}
