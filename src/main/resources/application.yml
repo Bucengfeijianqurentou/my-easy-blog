@@ -44,3 +44,8 @@ mybatis:
 # PageHelper配置
 pagehelper:
   helper-dialect: mysql
+
+# application.yml
+jwt:
+  secret: "4K5v8y/B?E(H+MbPeShVmYq3s6w9z$C&F)J@NcQfTjWnZr4u7x!A%D*G-KaPdSgUk" # 至少32字符
+  expiration: 86400000 # 24小时，单位毫秒

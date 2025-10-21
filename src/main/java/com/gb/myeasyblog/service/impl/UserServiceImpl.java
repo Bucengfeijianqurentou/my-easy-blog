@@ -12,6 +12,7 @@ import com.gb.myeasyblog.util.Md5Utils;
 import com.gb.myeasyblog.util.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     private final JwtUtil jwtUtil;
+
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 用户注册功能实现
@@ -45,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
         // 设置用户创建时间和加密后的密码
         user.setCreatedAt(LocalDateTime.now());
-        user.setPassword(Md5Utils.md5(userRegisterReqDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(userRegisterReqDTO.getPassword()));
 
         // 执行用户插入操作
         int insert = userMapper.insert(user);
@@ -72,10 +75,8 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR,"用户不存在");
         }
 
-        // 对输入密码进行MD5加密并与数据库中存储的密码进行比对
-        String encrypt = Md5Utils.md5(userLoginReqDTO.getPassword());
-
-        if (!encrypt.equals(user.getPassword())) {
+        // 使用 matches 方法来比较（它会自动处理盐值）
+        if (!passwordEncoder.matches(userLoginReqDTO.getPassword(), user.getPassword())) {
             throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR,"用户名或密码错误");
         }
 
