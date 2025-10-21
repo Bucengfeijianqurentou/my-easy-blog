@@ -7,6 +7,7 @@ import com.gb.myeasyblog.entity.Post;
 import com.gb.myeasyblog.service.PostService;
 import com.gb.myeasyblog.util.PageResult;
 import com.gb.myeasyblog.util.Result;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class PostController {
      * @return 返回保存结果，包含保存成功的帖子信息或错误信息
      */
     @PostMapping
-    public Result<Post> save(@RequestBody PostAddReqDTO postAddReqDTO){
+    public Result<Post> save(@Valid @RequestBody PostAddReqDTO postAddReqDTO){
         return postService.save(postAddReqDTO);
     }
 
@@ -38,7 +39,7 @@ public class PostController {
      * @return 返回封装了分页结果的统一响应对象，其中包含帖子信息的分页数据
      */
     @PostMapping("/getAll")
-    public Result<PageResult<Post>> getAll(@RequestBody PageReqDTO pageReqDTO){
+    public Result<PageResult<Post>> getAll(@Valid @RequestBody PageReqDTO pageReqDTO){
         // 调用服务层获取所有帖子的分页数据
         PageResult<Post> result = postService.getAll(pageReqDTO);
         return Result.success(result);
@@ -63,7 +64,7 @@ public class PostController {
      * @return 返回修改后的帖子结果封装对象
      */
     @PostMapping("/modify")
-    public Result<Post> modify(@RequestBody PostModifyReq postModifyReq) {
+    public Result<Post> modify(@Valid @RequestBody PostModifyReq postModifyReq) {
         return postService.modify(postModifyReq);
     }
 
@@ -87,7 +88,7 @@ public class PostController {
      * @return 返回分页帖子列表的结果封装
      */
     @PostMapping("/users/id")
-    public Result<PageResult<Post>> getPostsByUserId(@RequestBody PageReqDTO pageReqDTO){
+    public Result<PageResult<Post>> getPostsByUserId(@Valid @RequestBody PageReqDTO pageReqDTO){
         // 调用服务层方法根据用户ID分页查询帖子列表
         PageResult<Post> result = postService.getPostsByUserId(pageReqDTO);
         // 将查询结果封装成统一返回格式

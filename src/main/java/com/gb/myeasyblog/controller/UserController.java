@@ -4,6 +4,7 @@ import com.gb.myeasyblog.dto.UserLoginReqDTO;
 import com.gb.myeasyblog.dto.UserRegisterReqDTO;
 import com.gb.myeasyblog.service.UserService;
 import com.gb.myeasyblog.util.Result;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,14 +26,14 @@ public class UserController {
      * @return 注册结果，成功时返回"注册成功"的消息
      */
     @PostMapping("/register")
-    public Result register(@RequestBody UserRegisterReqDTO userRegisterReqDTO) {
+    public Result register(@Valid @RequestBody UserRegisterReqDTO userRegisterReqDTO) {
         // 调用用户服务执行注册逻辑
         return userService.register(userRegisterReqDTO);
     }
 
 
     @PostMapping("/login")
-    public Result login(@RequestBody UserLoginReqDTO userLoginReqDTO){
+    public Result login(@Valid @RequestBody UserLoginReqDTO userLoginReqDTO){
         return userService.login(userLoginReqDTO);
     }
 

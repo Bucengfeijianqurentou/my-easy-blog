@@ -35,9 +35,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Result add(CommentAddReqDTO commentAddReqDTO) {
         // 参数校验
-        if (commentAddReqDTO == null) {
+        /*if (commentAddReqDTO == null) {
             throw new BusinessException(HttpStatusConstants.BAD_REQUEST, "请求参数不能为空");
-        }
+        }*/
 
         // 获取当前用户ID
         Long userId = UserContext.getUserId();
