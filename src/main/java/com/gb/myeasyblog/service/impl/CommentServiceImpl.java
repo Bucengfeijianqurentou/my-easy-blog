@@ -2,6 +2,7 @@ package com.gb.myeasyblog.service.impl;
 
 import com.gb.myeasyblog.dto.CommentAddReqDTO;
 import com.gb.myeasyblog.entity.Comment;
+import com.gb.myeasyblog.exception.BusinessException;
 import com.gb.myeasyblog.mapper.CommentMapper;
 import com.gb.myeasyblog.service.CommentService;
 import com.gb.myeasyblog.util.HttpStatusConstants;
@@ -35,13 +36,13 @@ public class CommentServiceImpl implements CommentService {
     public Result add(CommentAddReqDTO commentAddReqDTO) {
         // 参数校验
         if (commentAddReqDTO == null) {
-            return Result.error(HttpStatusConstants.BAD_REQUEST, "请求参数不能为空");
+            throw new BusinessException(HttpStatusConstants.BAD_REQUEST, "请求参数不能为空");
         }
 
         // 获取当前用户ID
         Long userId = UserContext.getUserId();
         if (userId == null) {
-            return Result.error(HttpStatusConstants.UNAUTHORIZED, "用户未登录");
+            throw new BusinessException(HttpStatusConstants.UNAUTHORIZED, "用户未登录");
         }
 
         // 构造评论实体对象并设置基础属性
@@ -49,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
         try {
             BeanUtils.copyProperties(commentAddReqDTO, comment);
         } catch (Exception e) {
-            return Result.error(HttpStatusConstants.INTERNAL_ERROR, "参数转换失败");
+            throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR, "参数转换失败");
         }
 
         // 处理父评论ID：如果未设置parentId，则保持null表示根评论
@@ -66,10 +67,10 @@ public class CommentServiceImpl implements CommentService {
         try {
             int count = commentMapper.insert(comment);
             if (count != 1) {
-                return Result.error(HttpStatusConstants.INTERNAL_ERROR, "服务器内部错误");
+                throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR, "服务器内部错误");
             }
         } catch (Exception e) {
-            return Result.error(HttpStatusConstants.INTERNAL_ERROR, "数据库操作失败");
+            throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR, "数据库操作失败");
         }
 
         return Result.success("添加成功");

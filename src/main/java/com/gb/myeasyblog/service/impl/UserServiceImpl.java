@@ -3,6 +3,7 @@ package com.gb.myeasyblog.service.impl;
 import com.gb.myeasyblog.dto.UserLoginReqDTO;
 import com.gb.myeasyblog.dto.UserRegisterReqDTO;
 import com.gb.myeasyblog.entity.User;
+import com.gb.myeasyblog.exception.BusinessException;
 import com.gb.myeasyblog.mapper.UserMapper;
 import com.gb.myeasyblog.service.UserService;
 import com.gb.myeasyblog.util.HttpStatusConstants;
@@ -13,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.lang.invoke.VarHandle;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
 
         //判断用户名不能重复
         if (Objects.nonNull(userMapper.selectByUsername(userRegisterReqDTO.getUsername()))) {
-            return Result.error(HttpStatusConstants.INTERNAL_ERROR,"用户名已存在");
+            throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR,"用户名已存在");
         }
 
         // 创建用户实体对象并复制基础属性
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
         // 执行用户插入操作
         int insert = userMapper.insert(user);
         if (insert != 1) {
-            return Result.error(HttpStatusConstants.INTERNAL_ERROR,"注册失败");
+            throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR,"注册失败");
         }
         return Result.success("注册成功");
     }
@@ -69,14 +69,14 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectByUsername(userLoginReqDTO.getUsername());
 
         if (Objects.isNull(user)) {
-            return Result.error(HttpStatusConstants.INTERNAL_ERROR,"用户不存在");
+            throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR,"用户不存在");
         }
 
         // 对输入密码进行MD5加密并与数据库中存储的密码进行比对
         String encrypt = Md5Utils.md5(userLoginReqDTO.getPassword());
 
         if (!encrypt.equals(user.getPassword())) {
-            return Result.error(HttpStatusConstants.INTERNAL_ERROR,"用户名或密码错误");
+            throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR,"用户名或密码错误");
         }
 
         // 生成JWT token并返回登录成功结果

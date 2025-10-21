@@ -4,6 +4,7 @@ import com.gb.myeasyblog.dto.PageReqDTO;
 import com.gb.myeasyblog.dto.PostAddReqDTO;
 import com.gb.myeasyblog.dto.PostModifyReq;
 import com.gb.myeasyblog.entity.Post;
+import com.gb.myeasyblog.exception.BusinessException;
 import com.gb.myeasyblog.mapper.PostMapper;
 import com.gb.myeasyblog.service.PostService;
 import com.gb.myeasyblog.util.HttpStatusConstants;
@@ -38,7 +39,7 @@ public class PostServiceImpl implements PostService {
 
         // 参数校验
         if (Objects.isNull(postAddReqDTO)) {
-            return Result.error(HttpStatusConstants.BAD_REQUEST, "请求参数有误");
+            throw new BusinessException(HttpStatusConstants.BAD_REQUEST, "请求参数有误");
         }
 
         // 创建帖子实体并复制属性
@@ -51,7 +52,7 @@ public class PostServiceImpl implements PostService {
 
         // 检查插入结果
         if (insert < 0) {
-            return Result.error(HttpStatusConstants.INTERNAL_ERROR, "服务器内部错误");
+            throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR, "服务器内部错误");
         }
 
         // 返回成功结果
@@ -96,7 +97,7 @@ public class PostServiceImpl implements PostService {
         Post post = postMapper.selectById(id);
         if (Objects.isNull(post)) {
             // 文章不存在时返回错误结果
-            return Result.error(HttpStatusConstants.INTERNAL_ERROR,"文章不存在");
+            throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR,"文章不存在");
         }
         // 返回成功结果
         return Result.success(post);
@@ -117,12 +118,12 @@ public class PostServiceImpl implements PostService {
         Post oldPost = postMapper.selectById(id.intValue());
         // 检查要修改的帖子是否存在
         if (Objects.isNull(oldPost)) {
-            return Result.error(HttpStatusConstants.INTERNAL_ERROR, "请求目标不存在");
+            throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR, "请求目标不存在");
         }
         // 检查用户权限
         if (!UserContext.getUserId().equals(oldPost.getUserId())) {
             //后续可以换成抛出异常
-            return Result.error(HttpStatusConstants.FORBIDDEN, "无权限修改此帖子");
+            throw new BusinessException(HttpStatusConstants.FORBIDDEN, "无权限修改此帖子");
         }
 
 
@@ -133,7 +134,7 @@ public class PostServiceImpl implements PostService {
         // 执行更新操作
         int count = postMapper.update(post);
         if (count != 1) {
-            return Result.error("更新失败");
+            throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR,"更新失败");
         }
         // 返回更新后的帖子信息
         return Result.success(postMapper.selectById(id.intValue()));
@@ -150,7 +151,7 @@ public class PostServiceImpl implements PostService {
     public Result removeById(Integer id) {
         // 检查要删除的帖子是否存在
         if (Objects.isNull(postMapper.selectById(id.intValue()))) {
-            return Result.error(HttpStatusConstants.INTERNAL_ERROR, "请求目标不存在");
+            throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR, "请求目标不存在");
         }
 
         // 执行删除操作
@@ -161,7 +162,7 @@ public class PostServiceImpl implements PostService {
             return Result.success();
         }
 
-        return Result.error(HttpStatusConstants.INTERNAL_ERROR, "删除失败");
+        throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR, "删除失败");
     }
 
 

@@ -22,8 +22,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         log.info("开始注册自定义拦截器...");
         registry.addInterceptor(jwtTokenInterceptor)
                 .addPathPatterns("/api/**")
-                .excludePathPatterns("/api/admin/users/login")
-                .excludePathPatterns("/api/admin/users/register");
+                .excludePathPatterns("/api/users/login")
+                .excludePathPatterns("/api/users/register");
         //.excludePathPatterns("/admin/hehe");
     }
 }
