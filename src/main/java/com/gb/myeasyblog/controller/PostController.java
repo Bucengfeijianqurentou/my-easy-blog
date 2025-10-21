@@ -38,8 +38,8 @@ public class PostController {
      * @param pageReqDTO 分页请求参数对象，包含分页信息如页码、每页大小等
      * @return 返回封装了分页结果的统一响应对象，其中包含帖子信息的分页数据
      */
-    @PostMapping("/getAll")
-    public Result<PageResult<Post>> getAll(@Valid @RequestBody PageReqDTO pageReqDTO){
+    @GetMapping("/getAll")
+    public Result<PageResult<Post>> getAll(@Valid PageReqDTO pageReqDTO){
         // 调用服务层获取所有帖子的分页数据
         PageResult<Post> result = postService.getAll(pageReqDTO);
         return Result.success(result);
