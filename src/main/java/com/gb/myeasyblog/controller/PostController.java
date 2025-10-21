@@ -7,17 +7,13 @@ import com.gb.myeasyblog.entity.Post;
 import com.gb.myeasyblog.service.PostService;
 import com.gb.myeasyblog.util.PageResult;
 import com.gb.myeasyblog.util.Result;
-import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/posts")
 public class PostController {
 
     private final PostService postService;
@@ -28,7 +24,7 @@ public class PostController {
      * @param postAddReqDTO 帖子添加请求数据传输对象，包含帖子的标题、内容等信息
      * @return 返回保存结果，包含保存成功的帖子信息或错误信息
      */
-    @PostMapping("/posts")
+    @PostMapping
     public Result<Post> save(@RequestBody PostAddReqDTO postAddReqDTO){
         return postService.save(postAddReqDTO);
     }
@@ -54,7 +50,7 @@ public class PostController {
      * @param id 帖子ID
      * @return 返回包含帖子信息的结果对象
      */
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public Result<Post> getById(@PathVariable("id") Integer id){
         return postService.getById(id);
     }
@@ -66,7 +62,7 @@ public class PostController {
      * @param postModifyReq 帖子修改请求对象，包含要修改的帖子信息
      * @return 返回修改后的帖子结果封装对象
      */
-    @PostMapping("/posts/modify")
+    @PostMapping("/modify")
     public Result<Post> modify(@RequestBody PostModifyReq postModifyReq) {
         return postService.modify(postModifyReq);
     }
@@ -78,7 +74,7 @@ public class PostController {
      * @param id 帖子ID
      * @return 操作结果
      */
-    @DeleteMapping("/posts/{id}")
+    @DeleteMapping("/{id}")
     public Result remove(@PathVariable("id") Integer id) {
         return postService.removeById(id);
     }
@@ -90,7 +86,7 @@ public class PostController {
      * @param pageReqDTO 分页请求参数对象，包含分页信息和用户ID
      * @return 返回分页帖子列表的结果封装
      */
-    @PostMapping("/api/users/userid")
+    @PostMapping("/users/id")
     public Result<PageResult<Post>> getPostsByUserId(@RequestBody PageReqDTO pageReqDTO){
         // 调用服务层方法根据用户ID分页查询帖子列表
         PageResult<Post> result = postService.getPostsByUserId(pageReqDTO);

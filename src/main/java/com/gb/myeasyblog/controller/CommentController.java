@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comment")
+@RequestMapping("/api/comments")
 @RequiredArgsConstructor
 public class CommentController {
 
@@ -24,7 +24,7 @@ public class CommentController {
      * @param commentAddReqDTO 评论添加请求数据传输对象，包含评论内容、用户信息等
      * @return 返回添加结果，包含操作状态和相关数据
      */
-    @PostMapping("/add")
+    @PostMapping
     public Result add(@RequestBody CommentAddReqDTO commentAddReqDTO) {
         return commentService.add(commentAddReqDTO);
     }
@@ -35,7 +35,7 @@ public class CommentController {
      *
      * @return 返回包含所有评论信息的结果对象
      */
-    @GetMapping("/getAll")
+    @GetMapping
     public Result<List<Comment>> getAllComment() {
         return commentService.getAllComment();
     }
