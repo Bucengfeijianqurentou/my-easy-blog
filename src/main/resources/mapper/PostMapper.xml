@@ -6,9 +6,9 @@
 <mapper namespace="com.gb.myeasyblog.mapper.PostMapper">
 
     <!-- 插入一篇新文章 -->
-    <insert id="insert" parameterType="com.gb.myeasyblog.entity.Post">
-        INSERT INTO post (title, content,user_id)
-        VALUES (#{title}, #{content},#{userId})
+    <insert id="insert" parameterType="com.gb.myeasyblog.entity.Post" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO post (title, content, user_id, created_at, updated_at)
+        VALUES (#{title}, #{content}, #{userId}, NOW(), NOW())
     </insert>
 
     <select id="selectByUserId" resultType="com.gb.myeasyblog.entity.Post">

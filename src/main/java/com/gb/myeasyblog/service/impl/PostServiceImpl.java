@@ -42,6 +42,8 @@ public class PostServiceImpl implements PostService {
             throw new BusinessException(HttpStatusConstants.BAD_REQUEST, "请求参数有误");
         }
 
+        postAddReqDTO.setUserId(UserContext.getUserId());
+
         // 创建帖子实体并复制属性
         Post post = new Post();
         BeanUtils.copyProperties(postAddReqDTO, post);

@@ -15,6 +15,6 @@ public class PostAddReqDTO {
     @Size(min = 1, max = 10000, message = "内容长度不能超过10000个字符")
     private String content;
 
-    @NotNull(message = "用户ID不能为空")
+    //@NotNull(message = "用户ID不能为空")
     private Long userId;
 }

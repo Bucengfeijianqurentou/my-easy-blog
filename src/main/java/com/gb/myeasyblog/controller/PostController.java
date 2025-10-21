@@ -35,11 +35,19 @@ public class PostController {
     /**
      * 获取所有帖子信息的分页列表
      *
-     * @param pageReqDTO 分页请求参数对象，包含分页信息如页码、每页大小等
+     * @param pageNum 页码
+     * @param pageSize 每页大小
      * @return 返回封装了分页结果的统一响应对象，其中包含帖子信息的分页数据
      */
     @GetMapping("/getAll")
-    public Result<PageResult<Post>> getAll(@Valid PageReqDTO pageReqDTO){
+    public Result<PageResult<Post>> getAll(
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "10") int pageSize){
+        // 创建分页请求对象
+        PageReqDTO pageReqDTO = new PageReqDTO();
+        pageReqDTO.setPageNum(pageNum);
+        pageReqDTO.setPageSize(pageSize);
+        
         // 调用服务层获取所有帖子的分页数据
         PageResult<Post> result = postService.getAll(pageReqDTO);
         return Result.success(result);
