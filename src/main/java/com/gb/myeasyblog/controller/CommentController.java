@@ -1,13 +1,14 @@
 package com.gb.myeasyblog.controller;
 
 import com.gb.myeasyblog.dto.CommentAddReqDTO;
+import com.gb.myeasyblog.entity.Comment;
 import com.gb.myeasyblog.service.CommentService;
 import com.gb.myeasyblog.util.Result;
+import com.gb.myeasyblog.vo.CommentGetRespVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -27,6 +28,29 @@ public class CommentController {
     public Result add(@RequestBody CommentAddReqDTO commentAddReqDTO) {
         return commentService.add(commentAddReqDTO);
     }
+
+
+    /**
+     * 获取所有评论信息
+     *
+     * @return 返回包含所有评论信息的结果对象
+     */
+    @GetMapping("/getAll")
+    public Result<List<Comment>> getAllComment() {
+        return commentService.getAllComment();
+    }
+
+
+    /**
+     * 根据文章ID获取评论树形结构
+     * @param postId 文章ID
+     * @return Result<List<CommentVO>> 树形结构的评论列表
+     */
+    @GetMapping("/getTreeComment/{id}")
+    Result<List<CommentGetRespVO>> getCommentsByPostId(@PathVariable("id") Long postId) {
+        return commentService.getCommentsByPostId(postId);
+    }
+
 
 
 }

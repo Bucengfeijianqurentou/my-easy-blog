@@ -9,4 +9,16 @@
         insert into comment(post_id, user_id, content, parent_id, created_at)
         values (#{postId}, #{userId}, #{content}, #{parentId}, #{createdAt})
     </insert>
+
+    <select id="selectAllComment" resultType="com.gb.myeasyblog.entity.Comment">
+        select id, post_id, user_id, content, parent_id, created_at from comment order by created_at DESC
+    </select>
+
+    <select id="selectByPostId" parameterType="long" resultType="com.gb.myeasyblog.entity.Comment">
+        SELECT id, user_id, post_id, content, parent_id, created_at
+        FROM comment
+        WHERE post_id = #{postId}
+        ORDER BY created_at ASC
+    </select>
+
 </mapper>

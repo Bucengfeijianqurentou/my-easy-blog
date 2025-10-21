@@ -31,10 +31,12 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
                 // token验证通过，设置用户上下文信息
                 Long userId = jwtUtil.getUserIdFromToken(token);
                 UserContext.setUserId(userId);
+                log.info("用户已登录，当前用户ID是：{}",userId);
                 return true;
             }
             // token验证失败，拒绝访问
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            log.warn("校验不通通过！");
             return false;
         } catch (Exception e) {
             // token校验异常处理
