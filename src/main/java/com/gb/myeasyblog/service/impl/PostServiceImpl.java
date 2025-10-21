@@ -150,8 +150,14 @@ public class PostServiceImpl implements PostService {
     @Override
     public Result removeById(Integer id) {
         // 检查要删除的帖子是否存在
-        if (Objects.isNull(postMapper.selectById(id.intValue()))) {
+        Post post = postMapper.selectById(id.intValue());
+        if (Objects.isNull(post)) {
             throw new BusinessException(HttpStatusConstants.INTERNAL_ERROR, "请求目标不存在");
+        }
+
+        //每个人只能删除自己创建的帖子
+        if (!UserContext.getUserId().equals(post.getUserId())) {
+            throw new BusinessException(HttpStatusConstants.FORBIDDEN, "无删除权限");
         }
 
         // 执行删除操作
